@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: lily-postgres
+    environment:
+      POSTGRES_DB: thelilyofthenile_db
+      POSTGRES_USER: thelilyofthenile_user
+      POSTGRES_PASSWORD: thelilyofthenile123!
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: lily-backend
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/thelilyofthenile_db
+      SPRING_DATASOURCE_USERNAME: thelilyofthenile_user
+      SPRING_DATASOURCE_PASSWORD: thelilyofthenile123!
+    restart: on-failure
+
+volumes:
+  postgres_data:
+
