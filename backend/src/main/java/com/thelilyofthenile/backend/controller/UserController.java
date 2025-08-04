@@ -24,11 +24,10 @@ public class UserController{
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDTO dto) {
-        boolean success = service.login(dto);
-        if(success) {
-            return ResponseEntity.ok("Login successful");
-        }
-        else{
+        String token = service.login(dto);
+        if (token != null) {
+            return ResponseEntity.ok(token);
+        } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }

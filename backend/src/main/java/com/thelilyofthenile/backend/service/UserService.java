@@ -3,6 +3,7 @@ package com.thelilyofthenile.backend.service;
 import com.thelilyofthenile.backend.model.User;
 import com.thelilyofthenile.backend.dto.UserLoginDTO;
 import com.thelilyofthenile.backend.repository.UserRepository;
+import com.thelilyofthenile.backend.security.JwtUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository repo;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository repo) {
+
+    public UserService(UserRepository repo, JwtUtil jwtUtil) {
         this.repo = repo;
+        this.jwtUtil = jwtUtil;
     }
 
     public User register(User user) {
@@ -20,9 +24,10 @@ public class UserService {
         return repo.save(user);
     }
 
-    public boolean login(UserLoginDTO dto) {
+    public String login(UserLoginDTO dto) {
         return repo.findByEmail(dto.getEmail())
-                .map(user -> encoder.matches(dto.getPassword(), user.getPassword()))
-                .orElse(false);
+                .filter(user -> encoder.matches(dto.getPassword(), user.getPassword()))
+                .map(user -> jwtUtil.generateToken(user.getEmail()))
+                .orElse(null);
     }
 }
