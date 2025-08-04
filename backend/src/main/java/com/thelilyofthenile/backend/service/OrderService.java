@@ -1,3 +1,22 @@
+
+package com.thelilyofthenile.backend.service;
+
+import com.thelilyofthenile.backend.model.Order;
+import com.thelilyofthenile.backend.model.User;
+import com.thelilyofthenile.backend.model.CartItem;
+import com.thelilyofthenile.backend.model.OrderItem;
+import com.thelilyofthenile.backend.repository.CartItemRepository;
+import com.thelilyofthenile.backend.repository.OrderRepository;
+import com.thelilyofthenile.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.time.LocalDateTime;
+
+
 @Service
 public class OrderService {
     @Autowired private OrderRepository orderRepo;
