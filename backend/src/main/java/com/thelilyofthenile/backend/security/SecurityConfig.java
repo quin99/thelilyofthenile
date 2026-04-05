@@ -22,10 +22,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/**").permitAll()
-                        .requestMatchers("/api/products/**").permitAll()
-                        .requestMatchers("/api/cart/**").authenticated()
-                        .requestMatchers("/api/orders/**").authenticated()
+                        .requestMatchers("/api/v1/customers/**").permitAll()
+                        .requestMatchers("/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/v1/cart/**").authenticated()
+                        .requestMatchers("/api/v1/orders/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,5 +1,7 @@
 package com.thelilyofthenile.backend.service;
 
+import com.thelilyofthenile.backend.dto.ProductRequestDTO;
+import com.thelilyofthenile.backend.dto.ProductResponseDTO;
 import com.thelilyofthenile.backend.model.Product;
 import com.thelilyofthenile.backend.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -15,31 +17,65 @@ public class ProductService {
         this.repo = repo;
     }
 
-    public List<Product> getAll() {
-        return repo.findAll();
+    public List<ProductResponseDTO> getAll() {
+        return repo.findAll().stream().map(this::toResponseDTO).toList();
     }
 
-    public Product getById(Long id) {
-        return repo.findById(id).orElse(null);
+    public List<ProductResponseDTO> getByCategory(String category) {
+        return repo.findAll().stream()
+                .filter(p -> p.getCategory() != null &&
+                             p.getCategory().name().equalsIgnoreCase(category))
+                .map(this::toResponseDTO)
+                .toList();
     }
 
-    public Product save(Product product) {
-        return repo.save(product);
+    public ProductResponseDTO getById(Long id) {
+        return repo.findById(id).map(this::toResponseDTO).orElse(null);
     }
 
-    public Product update(Long id, Product updated) {
-        Product p = getById(id);
-        if (p == null) return null;
+    public ProductResponseDTO create(ProductRequestDTO dto) {
+        Product product = toEntity(dto);
+        return toResponseDTO(repo.save(product));
+    }
 
-        p.setName(updated.getName());
-        p.setDescription(updated.getDescription());
-        p.setPrice(updated.getPrice());
-        p.setImageUrl(updated.getImageUrl());
+    public ProductResponseDTO update(Long id, ProductRequestDTO dto) {
+        Product product = repo.findById(id).orElse(null);
+        if (product == null) return null;
 
-        return repo.save(p);
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setImageUrl(dto.getImageUrl());
+        product.setCategory(dto.getCategory());
+        product.setStock(dto.getStock());
+
+        return toResponseDTO(repo.save(product));
     }
 
     public void delete(Long id) {
         repo.deleteById(id);
+    }
+
+    private Product toEntity(ProductRequestDTO dto) {
+        return Product.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .price(dto.getPrice())
+                .imageUrl(dto.getImageUrl())
+                .category(dto.getCategory())
+                .stock(dto.getStock())
+                .build();
+    }
+
+    private ProductResponseDTO toResponseDTO(Product product) {
+        ProductResponseDTO dto = new ProductResponseDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setImageUrl(product.getImageUrl());
+        dto.setCategory(product.getCategory());
+        dto.setStock(product.getStock());
+        return dto;
     }
 }

@@ -1,53 +1,48 @@
 package com.thelilyofthenile.backend.controller;
 
-import com.thelilyofthenile.backend.model.User;
 import com.thelilyofthenile.backend.model.CartItem;
-import com.thelilyofthenile.backend.model.Order;
-import com.thelilyofthenile.backend.model.OrderItem;
 import com.thelilyofthenile.backend.service.CartService;
-import com.thelilyofthenile.backend.repository.OrderRepository;
-import com.thelilyofthenile.backend.repository.CartItemRepository;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.time.LocalDateTime;
-
-
 
 @RestController
-@RequestMapping("/api/cart")
-@PreAuthorize("hasAuthority('ROLE_USER')")
+@RequestMapping("/api/v1/cart")
 public class CartController {
 
-    @Autowired private CartService cartService;
+    private final CartService cartService;
+
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
+    }
 
     @GetMapping
-    public List<CartItem> getCart(@AuthenticationPrincipal UserDetails userDetails) {
-        return cartService.getCart(userDetails.getUsername());
+    public ResponseEntity<List<CartItem>> getCart(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(cartService.getCart(userDetails.getUsername()));
     }
 
     @PostMapping("/add")
-    public CartItem addToCart(@AuthenticationPrincipal UserDetails userDetails,
-                              @RequestBody Map<String, Object> body) {
+    public ResponseEntity<CartItem> addToCart(@AuthenticationPrincipal UserDetails userDetails,
+                                              @RequestBody Map<String, Object> body) {
         Long productId = Long.valueOf(body.get("productId").toString());
         int quantity = Integer.parseInt(body.get("quantity").toString());
-        return cartService.addItem(userDetails.getUsername(), productId, quantity);
+        return ResponseEntity.ok(cartService.addItem(userDetails.getUsername(), productId, quantity));
     }
 
     @DeleteMapping("/remove/{productId}")
-    public void removeFromCart(@AuthenticationPrincipal UserDetails userDetails,
-                               @PathVariable Long productId) {
+    public ResponseEntity<Void> removeFromCart(@AuthenticationPrincipal UserDetails userDetails,
+                                               @PathVariable Long productId) {
         cartService.removeItem(userDetails.getUsername(), productId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/clear")
-    public void clearCart(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Void> clearCart(@AuthenticationPrincipal UserDetails userDetails) {
         cartService.clearCart(userDetails.getUsername());
+        return ResponseEntity.noContent().build();
     }
 }

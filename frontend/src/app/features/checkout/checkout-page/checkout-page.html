@@ -1,1 +1,57 @@
-<p>checkout-page works!</p>
+<div class="pt-16 min-h-screen">
+  <div class="max-w-5xl mx-auto px-6 py-16">
+
+    <div class="flex items-center gap-6 mb-12">
+      <h1 class="font-display text-brand-ivory text-3xl">Checkout</h1>
+      <div class="flex-1 h-px bg-brand-border"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+      <!-- Payment (Stripe placeholder) -->
+      <div>
+        <h2 class="text-[10px] tracking-widest uppercase text-brand-ivory mb-6">Payment Details</h2>
+        <div class="border border-brand-border p-8 flex flex-col items-center justify-center gap-4 min-h-64 text-center">
+          <div class="w-12 h-12 border border-brand-gold/30 rounded-full flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+          </div>
+          <p class="text-brand-ivory-dim text-sm">Stripe payment integration coming soon.</p>
+          <p class="text-[10px] tracking-widest uppercase text-brand-gold">Secure checkout</p>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div>
+        <h2 class="text-[10px] tracking-widest uppercase text-brand-ivory mb-6">Order Summary</h2>
+        <div class="border border-brand-border divide-y divide-brand-border">
+          @for (item of items(); track item.id) {
+            <div class="flex items-center gap-4 p-4">
+              <div class="w-12 h-14 bg-brand-raised flex-shrink-0 overflow-hidden">
+                @if (item.product.imageUrl) {
+                  <img [src]="item.product.imageUrl" [alt]="item.product.name" class="w-full h-full object-cover">
+                }
+              </div>
+              <div class="flex-1">
+                <p class="font-display text-brand-ivory text-sm">{{ item.product.name }}</p>
+                <p class="text-brand-ivory-dim text-xs">Qty: {{ item.quantity }}</p>
+              </div>
+              <span class="text-brand-ivory text-sm">
+                {{ item.product.price * item.quantity | currency:'GBP':'symbol':'1.2-2' }}
+              </span>
+            </div>
+          }
+          <div class="flex justify-between p-4">
+            <span class="text-brand-ivory font-medium">Total</span>
+            <span class="text-brand-gold font-medium">{{ total | currency:'GBP':'symbol':'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <a routerLink="/cart" class="inline-block mt-4 text-[10px] tracking-widest uppercase text-brand-ivory-dim hover:text-brand-ivory transition-colors">
+          ← Back to Cart
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

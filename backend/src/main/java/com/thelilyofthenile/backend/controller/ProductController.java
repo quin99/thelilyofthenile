@@ -1,14 +1,17 @@
 package com.thelilyofthenile.backend.controller;
 
-import com.thelilyofthenile.backend.model.Product;
+import com.thelilyofthenile.backend.dto.ProductRequestDTO;
+import com.thelilyofthenile.backend.dto.ProductResponseDTO;
 import com.thelilyofthenile.backend.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
-@CrossOrigin(origins = "http://localhost:4200")  // Allow Angular frontend
+@RequestMapping("/api/v1/products")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
 
     private final ProductService service;
@@ -18,27 +21,37 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAll() {
-        return service.getAll();
+    public ResponseEntity<List<ProductResponseDTO>> getAll(
+            @RequestParam(required = false) String category) {
+        List<ProductResponseDTO> products = category != null
+                ? service.getByCategory(category)
+                : service.getAll();
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public Product getById(@PathVariable Long id) {
-        return service.getById(id);
+    public ResponseEntity<ProductResponseDTO> getById(@PathVariable Long id) {
+        ProductResponseDTO product = service.getById(id);
+        if (product == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public Product create(@RequestBody Product product) {
-        return service.save(product);
+    public ResponseEntity<ProductResponseDTO> create(@Valid @RequestBody ProductRequestDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product product) {
-        return service.update(id, product);
+    public ResponseEntity<ProductResponseDTO> update(@PathVariable Long id,
+                                                     @Valid @RequestBody ProductRequestDTO dto) {
+        ProductResponseDTO updated = service.update(id, dto);
+        if (updated == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

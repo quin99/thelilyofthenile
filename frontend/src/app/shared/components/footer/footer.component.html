@@ -1,0 +1,39 @@
+<footer class="border-t border-brand-border mt-24">
+  <div class="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+
+    <div>
+      <p class="font-display text-brand-ivory text-lg mb-3">The Lily of the Nile</p>
+      <p class="text-brand-ivory-dim text-sm leading-relaxed">
+        Botanicals for those who seek<br>beauty in every detail.
+      </p>
+    </div>
+
+    <div>
+      <p class="text-xs tracking-widest uppercase text-brand-ivory mb-4">Shop</p>
+      <ul class="flex flex-col gap-2">
+        @for (link of shopLinks; track link.path) {
+          <li>
+            <a [routerLink]="link.path" class="text-sm text-brand-ivory-dim hover:text-brand-gold transition-colors">
+              {{ link.label }}
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div>
+      <p class="text-xs tracking-widest uppercase text-brand-ivory mb-4">Account</p>
+      <ul class="flex flex-col gap-2">
+        <li><a routerLink="/account" class="text-sm text-brand-ivory-dim hover:text-brand-gold transition-colors">Sign In</a></li>
+        <li><a routerLink="/account" class="text-sm text-brand-ivory-dim hover:text-brand-gold transition-colors">Register</a></li>
+        <li><a routerLink="/cart" class="text-sm text-brand-ivory-dim hover:text-brand-gold transition-colors">Cart</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-brand-border">
+    <p class="max-w-7xl mx-auto px-6 py-6 text-xs text-brand-ivory-dim">
+      &copy; {{ year }} The Lily of the Nile. All rights reserved.
+    </p>
+  </div>
+</footer>

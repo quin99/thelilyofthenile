@@ -12,6 +12,7 @@ Built solo by a fullstack engineer. Claude is both a coding partner and code rev
 - **Database**: PostgreSQL
 - **Build Tools**: Maven (backend), Angular CLI (frontend)
 - **Testing**: JUnit 5 (backend), Cypress (E2E frontend)
+- **Payments**: Stripe (`stripe-java` backend, `@stripe/stripe-js` + `@stripe/angular-stripe-service` frontend)
 - **Version Control**: Git
 
 ---
@@ -71,6 +72,29 @@ thelilyofthenile/
 - Prefer simple solutions — do not over-engineer
 
 ---
+
+## Payment Processing
+
+- **Provider**: Stripe
+- **Frontend**: `@stripe/stripe-js` and `@stripe/angular-stripe-service`
+- **Backend**: `stripe-java` SDK
+- **Flow**: Angular calls backend to create PaymentIntent → backend returns clientSecret → Angular mounts Stripe Payment Element → Stripe confirms payment → webhook fires `payment_intent.succeeded` → backend marks order PAID
+
+### Environment Variables (never hardcode these)
+- `STRIPE_SECRET_KEY` — backend only, never exposed to frontend
+- `STRIPE_WEBHOOK_SECRET` — backend only, for verifying webhook signatures
+- `STRIPE_PUBLISHABLE_KEY` — frontend safe, used to initialize Stripe.js
+
+### Stripe Conventions
+- Always create PaymentIntent on the backend — never from Angular
+- Always verify webhook signatures — never trust payment status from the frontend
+- Store `paymentIntentId` on the Order entity for reference
+- Order status flow: PENDING → PAID → FULFILLED → SHIPPED
+
+### Apple Pay Requirements
+- Domain must be HTTPS in production
+- Host Stripe domain verification file at `/.well-known/apple-developer-merchantid-domain-association`
+- Apple Pay will not appear on localhost — use card testing in dev
 
 ## API Conventions
 - Base path: `/api/v1`
@@ -135,5 +159,6 @@ docker-compose up
 ---
 
 ## Current Focus
-<!-- Claude: update this section at the start of each working session with what we're actively building -->
-```
+- Aligning codebase with CLAUDE.md as source of truth
+- Renamed `User` → `Customer` throughout backend (model, repo, service, controller, DTOs)
+- Stripe payment integration is the next major feature to implement

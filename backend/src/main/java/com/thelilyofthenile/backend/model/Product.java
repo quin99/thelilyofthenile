@@ -17,5 +17,9 @@ public class Product {
     private String description;
     private Double price;
     private String imageUrl;
-}
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    private Integer stock;
+}

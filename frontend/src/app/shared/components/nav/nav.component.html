@@ -1,0 +1,67 @@
+<nav
+  [style.background]="scrolled() ? 'rgba(253,249,245,0.96)' : 'transparent'"
+  [style.padding]="scrolled() ? '20px 64px' : '32px 64px'"
+  [style.box-shadow]="scrolled() ? '0 1px 0 #f2ddd7' : 'none'"
+  [style.backdrop-filter]="scrolled() ? 'blur(12px)' : 'none'"
+  style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;transition:background .5s,padding .4s,box-shadow .4s;">
+
+  <!-- Logo -->
+  <a routerLink="/" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:300;letter-spacing:.14em;color:#4a2e2e;text-decoration:none;">
+    The <em style="font-style:italic;color:#b8846a;">Lily</em> of the Nile
+  </a>
+
+  <!-- Desktop links -->
+  <ul style="display:flex;gap:36px;list-style:none;" class="hidden md:flex">
+    @for (link of navLinks; track link.path) {
+      <li>
+        <a [routerLink]="link.path"
+           style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#9a7070;text-decoration:none;font-weight:400;transition:color .3s;"
+           routerLinkActive
+           #rla="routerLinkActive"
+           [style.color]="rla.isActive ? '#c4877a' : '#9a7070'">
+          {{ link.label }}
+        </a>
+      </li>
+    }
+  </ul>
+
+  <!-- Right -->
+  <div style="display:flex;align-items:center;gap:20px;">
+    <a routerLink="/cart"
+       style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#4a2e2e;text-decoration:none;display:flex;align-items:center;gap:8px;font-weight:400;">
+      Cart
+      @if (cart.itemCount() > 0) {
+        <span style="width:16px;height:16px;border-radius:50%;background:#c4877a;color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:500;">
+          {{ cart.itemCount() }}
+        </span>
+      }
+    </a>
+    <a routerLink="/account"
+       style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#9a7070;text-decoration:none;font-weight:400;">
+      Account
+    </a>
+
+    <!-- Mobile hamburger -->
+    <button (click)="menuOpen.update(v => !v)"
+            class="md:hidden"
+            style="background:none;border:none;color:#4a2e2e;font-size:20px;cursor:none;">
+      ☰
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+@if (menuOpen()) {
+  <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(253,249,245,.97);z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;">
+    <button (click)="menuOpen.set(false)"
+            style="position:absolute;top:24px;right:24px;background:none;border:none;font-size:24px;color:#4a2e2e;cursor:none;">
+      ✕
+    </button>
+    @for (link of navLinks; track link.path) {
+      <a [routerLink]="link.path" (click)="menuOpen.set(false)"
+         style="font-family:'Playfair Display',serif;font-size:28px;font-weight:300;color:#4a2e2e;text-decoration:none;letter-spacing:.08em;">
+        {{ link.label }}
+      </a>
+    }
+  </div>
+}

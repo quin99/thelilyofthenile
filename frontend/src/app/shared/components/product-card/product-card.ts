@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { CurrencyPipe } from '@angular/common';
+import { Product } from '../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-card',
-  imports: [],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink, CurrencyPipe],
   templateUrl: './product-card.html',
-  styleUrl: './product-card.scss'
 })
-export class ProductCard {
-
+export class ProductCardComponent {
+  product = input.required<Product>();
+  addToCart = output<Product>();
 }

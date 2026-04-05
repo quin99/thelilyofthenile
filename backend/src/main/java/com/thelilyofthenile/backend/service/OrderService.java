@@ -1,36 +1,41 @@
-
 package com.thelilyofthenile.backend.service;
 
-import com.thelilyofthenile.backend.model.Order;
-import com.thelilyofthenile.backend.model.User;
+import com.thelilyofthenile.backend.dto.OrderItemDTO;
+import com.thelilyofthenile.backend.dto.OrderResponseDTO;
 import com.thelilyofthenile.backend.model.CartItem;
+import com.thelilyofthenile.backend.model.Customer;
+import com.thelilyofthenile.backend.model.Order;
 import com.thelilyofthenile.backend.model.OrderItem;
 import com.thelilyofthenile.backend.repository.CartItemRepository;
+import com.thelilyofthenile.backend.repository.CustomerRepository;
 import com.thelilyofthenile.backend.repository.OrderRepository;
-import com.thelilyofthenile.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.time.LocalDateTime;
-
 
 @Service
 public class OrderService {
-    @Autowired private OrderRepository orderRepo;
-    @Autowired private CartItemRepository cartRepo;
-    @Autowired private UserRepository userRepo;
 
-    public Order placeOrder(String email) {
-        User user = userRepo.findByEmail(email).orElseThrow();
-        List<CartItem> cartItems = cartRepo.findByUser(user);
+    private final OrderRepository orderRepo;
+    private final CartItemRepository cartRepo;
+    private final CustomerRepository customerRepo;
+
+    public OrderService(OrderRepository orderRepo,
+                        CartItemRepository cartRepo,
+                        CustomerRepository customerRepo) {
+        this.orderRepo = orderRepo;
+        this.cartRepo = cartRepo;
+        this.customerRepo = customerRepo;
+    }
+
+    public OrderResponseDTO placeOrder(String email) {
+        Customer customer = customerRepo.findByEmail(email).orElseThrow();
+        List<CartItem> cartItems = cartRepo.findByCustomer(customer);
 
         if (cartItems.isEmpty()) throw new RuntimeException("Cart is empty");
 
         Order order = new Order();
-        order.setUser(user);
+        order.setCustomer(customer);
         order.setStatus("PENDING");
 
         double total = 0;
@@ -47,13 +52,33 @@ public class OrderService {
         }
 
         order.setTotalAmount(total);
+        cartRepo.deleteAll(cartItems);
 
-        cartRepo.deleteAll(cartItems); // Clear cart
-        return orderRepo.save(order);
+        return toResponseDTO(orderRepo.save(order));
     }
 
-    public List<Order> getOrders(String email) {
-        User user = userRepo.findByEmail(email).orElseThrow();
-        return orderRepo.findByUser(user);
+    public List<OrderResponseDTO> getOrders(String email) {
+        Customer customer = customerRepo.findByEmail(email).orElseThrow();
+        return orderRepo.findByCustomer(customer).stream().map(this::toResponseDTO).toList();
+    }
+
+    private OrderResponseDTO toResponseDTO(Order order) {
+        OrderResponseDTO dto = new OrderResponseDTO();
+        dto.setId(order.getId());
+        dto.setStatus(order.getStatus());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setPaymentIntentId(order.getPaymentIntentId());
+        dto.setCreatedAt(order.getCreatedAt());
+        dto.setItems(order.getItems().stream().map(this::toItemDTO).toList());
+        return dto;
+    }
+
+    private OrderItemDTO toItemDTO(OrderItem item) {
+        OrderItemDTO dto = new OrderItemDTO();
+        dto.setProductId(item.getProduct().getId());
+        dto.setProductName(item.getProduct().getName());
+        dto.setQuantity(item.getQuantity());
+        dto.setPriceAtPurchase(item.getPriceAtPurchase());
+        return dto;
     }
 }

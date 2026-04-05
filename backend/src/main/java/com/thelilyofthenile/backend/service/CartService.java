@@ -1,38 +1,42 @@
 package com.thelilyofthenile.backend.service;
 
 import com.thelilyofthenile.backend.model.CartItem;
-import com.thelilyofthenile.backend.model.User;
+import com.thelilyofthenile.backend.model.Customer;
 import com.thelilyofthenile.backend.model.Product;
 import com.thelilyofthenile.backend.repository.CartItemRepository;
+import com.thelilyofthenile.backend.repository.CustomerRepository;
 import com.thelilyofthenile.backend.repository.ProductRepository;
-import com.thelilyofthenile.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.time.LocalDateTime;
-
 
 @Service
 public class CartService {
-    @Autowired private CartItemRepository cartItemRepo;
-    @Autowired private UserRepository userRepo;
-    @Autowired private ProductRepository productRepo;
+
+    private final CartItemRepository cartItemRepo;
+    private final CustomerRepository customerRepo;
+    private final ProductRepository productRepo;
+
+    public CartService(CartItemRepository cartItemRepo,
+                       CustomerRepository customerRepo,
+                       ProductRepository productRepo) {
+        this.cartItemRepo = cartItemRepo;
+        this.customerRepo = customerRepo;
+        this.productRepo = productRepo;
+    }
 
     public List<CartItem> getCart(String email) {
-        User user = userRepo.findByEmail(email).orElseThrow();
-        return cartItemRepo.findByUser(user);
+        Customer customer = customerRepo.findByEmail(email).orElseThrow();
+        return cartItemRepo.findByCustomer(customer);
     }
 
     public CartItem addItem(String email, Long productId, int quantity) {
-        User user = userRepo.findByEmail(email).orElseThrow();
+        Customer customer = customerRepo.findByEmail(email).orElseThrow();
         Product product = productRepo.findById(productId).orElseThrow();
 
-        CartItem item = cartItemRepo.findByUserAndProduct(user, product)
+        CartItem item = cartItemRepo.findByCustomerAndProduct(customer, product)
                 .orElse(new CartItem());
-        item.setUser(user);
+        item.setCustomer(customer);
         item.setProduct(product);
         item.setQuantity(item.getId() == null ? quantity : item.getQuantity() + quantity);
 
@@ -40,14 +44,14 @@ public class CartService {
     }
 
     public void removeItem(String email, Long productId) {
-        User user = userRepo.findByEmail(email).orElseThrow();
+        Customer customer = customerRepo.findByEmail(email).orElseThrow();
         Product product = productRepo.findById(productId).orElseThrow();
-        cartItemRepo.findByUserAndProduct(user, product)
+        cartItemRepo.findByCustomerAndProduct(customer, product)
                 .ifPresent(cartItemRepo::delete);
     }
 
     public void clearCart(String email) {
-        User user = userRepo.findByEmail(email).orElseThrow();
-        cartItemRepo.deleteAll(cartItemRepo.findByUser(user));
+        Customer customer = customerRepo.findByEmail(email).orElseThrow();
+        cartItemRepo.deleteAll(cartItemRepo.findByCustomer(customer));
     }
 }

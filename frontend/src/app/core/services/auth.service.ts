@@ -1,20 +1,42 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { CustomerRegister, CustomerResponse } from '../models/customer.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private key = 'auth_token';
+  private readonly tokenKey = 'auth_token';
+  readonly isLoggedIn = signal(this.hasToken());
 
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }) {
     return this.http
-      .post<{ token: string }>(`${environment.apiUrl}/auth/login`, credentials)
-      .pipe(tap(res => localStorage.setItem(this.key, res.token)));
+      .post(`${environment.apiUrl}/v1/customers/login`, credentials, { responseType: 'text' })
+      .pipe(tap(token => {
+        localStorage.setItem(this.tokenKey, token);
+        this.isLoggedIn.set(true);
+      }));
   }
-  logout() { localStorage.removeItem(this.key); }
-  token() { return localStorage.getItem(this.key) ?? ''; }
-  isLoggedIn() { return !!this.token(); }
+
+  register(data: CustomerRegister) {
+    return this.http.post<CustomerResponse>(
+      `${environment.apiUrl}/v1/customers/register`,
+      data
+    );
+  }
+
+  logout() {
+    localStorage.removeItem(this.tokenKey);
+    this.isLoggedIn.set(false);
+  }
+
+  token(): string {
+    return localStorage.getItem(this.tokenKey) ?? '';
+  }
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem(this.tokenKey);
+  }
 }
