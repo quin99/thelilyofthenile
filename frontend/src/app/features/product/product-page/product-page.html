@@ -1,25 +1,25 @@
-<div class="pt-16 min-h-screen">
+<div style="min-height:100vh;padding-top:64px;background:#1a0f0f;">
   @if (product(); as p) {
-    <div class="max-w-6xl mx-auto px-6 py-16">
+    <div style="max-width:1100px;margin:0 auto;padding:64px 24px;">
 
       <!-- Breadcrumb -->
-      <nav class="flex items-center gap-2 text-[10px] tracking-widest uppercase text-brand-ivory-dim mb-12">
-        <a routerLink="/" class="hover:text-brand-ivory transition-colors">Home</a>
+      <nav style="display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:48px;">
+        <a routerLink="/" style="color:#b8a89a;text-decoration:none;">Home</a>
         <span>/</span>
-        <a [routerLink]="'/' + p.category.toLowerCase()" class="hover:text-brand-ivory transition-colors">{{ p.category }}</a>
+        <a [routerLink]="'/' + p.category.toLowerCase()" style="color:#b8a89a;text-decoration:none;">{{ p.category }}</a>
         <span>/</span>
-        <span class="text-brand-ivory truncate max-w-48">{{ p.name }}</span>
+        <span style="color:#f5ede0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;">{{ p.name }}</span>
       </nav>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;">
 
         <!-- Image -->
-        <div class="aspect-[3/4] bg-brand-surface relative overflow-hidden">
+        <div style="aspect-ratio:3/4;background:#261414;position:relative;overflow:hidden;">
           @if (p.imageUrl) {
-            <img [src]="p.imageUrl" [alt]="p.name" class="w-full h-full object-cover">
+            <img [src]="p.imageUrl" [alt]="p.name" style="width:100%;height:100%;object-fit:cover;">
           } @else {
-            <div class="w-full h-full flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-brand-border" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <svg xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;color:#3a2020;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
@@ -27,33 +27,43 @@
         </div>
 
         <!-- Info -->
-        <div class="flex flex-col justify-center">
-          <span class="text-[10px] tracking-[0.3em] uppercase text-brand-gold mb-3">{{ p.category }}</span>
-          <h1 class="font-display text-brand-ivory text-3xl md:text-4xl mb-4">{{ p.name }}</h1>
-          <p class="text-brand-ivory text-2xl mb-6">{{ p.price | currency:'GBP':'symbol':'1.2-2' }}</p>
-          <div class="w-12 h-px bg-brand-border mb-6"></div>
-          <p class="text-brand-ivory-dim leading-relaxed mb-8">{{ p.description }}</p>
+        <div style="display:flex;flex-direction:column;justify-content:center;padding-top:32px;">
+          <span style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#c9a96e;margin-bottom:12px;">{{ p.category }}</span>
+          <h1 style="font-family:'Playfair Display',serif;font-size:32px;font-weight:300;color:#f5ede0;margin-bottom:16px;line-height:1.2;">{{ p.name }}</h1>
+          <p style="color:#f5ede0;font-size:22px;margin-bottom:24px;">{{ p.price | currency:'GBP':'symbol':'1.2-2' }}</p>
+          <div style="width:48px;height:1px;background:#3a2020;margin-bottom:24px;"></div>
+          <p style="color:#b8a89a;line-height:1.7;margin-bottom:32px;font-size:14px;">{{ p.description }}</p>
 
-          <!-- Stock -->
+          <!-- Stock status -->
           @if (p.stock > 0) {
-            <p class="text-xs text-brand-sage mb-6">{{ p.stock }} in stock</p>
+            <p style="font-size:11px;color:#7aaa78;margin-bottom:24px;">{{ p.stock }} in stock</p>
           } @else {
-            <p class="text-xs text-brand-blush mb-6">Out of stock</p>
+            <p style="font-size:11px;color:#e8b4a0;margin-bottom:24px;">Out of stock</p>
           }
 
           <!-- Quantity + Add to Cart -->
           @if (p.stock > 0) {
-            <div class="flex items-center gap-4 mb-6">
-              <div class="flex items-center border border-brand-border">
-                <button (click)="decrement()" class="px-4 py-3 text-brand-ivory-dim hover:text-brand-ivory transition-colors">−</button>
-                <span class="px-5 py-3 text-brand-ivory text-sm border-x border-brand-border min-w-12 text-center">{{ quantity() }}</span>
-                <button (click)="increment()" class="px-4 py-3 text-brand-ivory-dim hover:text-brand-ivory transition-colors">+</button>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+              <!-- Quantity selector -->
+              <div style="display:flex;align-items:center;border:1px solid #3a2020;">
+                <button (click)="decrement()"
+                        style="padding:12px 16px;color:#b8a89a;background:none;border:none;cursor:pointer;font-size:16px;line-height:1;">
+                  −
+                </button>
+                <span style="padding:12px 20px;color:#f5ede0;font-size:13px;border-left:1px solid #3a2020;border-right:1px solid #3a2020;min-width:48px;text-align:center;">
+                  {{ quantity() }}
+                </span>
+                <button (click)="increment()"
+                        style="padding:12px 16px;color:#b8a89a;background:none;border:none;cursor:pointer;font-size:16px;line-height:1;">
+                  +
+                </button>
               </div>
+
+              <!-- Add to cart -->
               <button (click)="addToCart()"
-                      class="flex-1 py-3.5 text-xs tracking-widest uppercase transition-all duration-200"
-                      [class]="added()
-                        ? 'bg-brand-sage text-brand-bg'
-                        : 'bg-brand-gold text-brand-bg hover:bg-brand-gold-light'">
+                      style="flex:1;padding:14px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-weight:500;transition:background .2s;"
+                      [style.background]="added() ? '#7aaa78' : '#c9a96e'"
+                      [style.color]="'#1a0f0f'">
                 {{ added() ? 'Added to Cart ✓' : 'Add to Cart' }}
               </button>
             </div>
@@ -62,8 +72,8 @@
       </div>
     </div>
   } @else {
-    <div class="flex items-center justify-center h-96">
-      <div class="w-8 h-8 border border-brand-gold/30 border-t-brand-gold rounded-full animate-spin"></div>
+    <div style="display:flex;align-items:center;justify-content:center;height:384px;">
+      <div style="width:32px;height:32px;border:1px solid rgba(201,169,110,0.3);border-top-color:#c9a96e;border-radius:50%;animation:spin 1s linear infinite;"></div>
     </div>
   }
 </div>

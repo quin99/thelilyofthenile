@@ -2,6 +2,7 @@ package com.thelilyofthenile.backend.service;
 
 import com.thelilyofthenile.backend.dto.ProductRequestDTO;
 import com.thelilyofthenile.backend.dto.ProductResponseDTO;
+import com.thelilyofthenile.backend.model.Category;
 import com.thelilyofthenile.backend.model.Product;
 import com.thelilyofthenile.backend.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,8 @@ public class ProductService {
     }
 
     public List<ProductResponseDTO> getByCategory(String category) {
-        return repo.findAll().stream()
-                .filter(p -> p.getCategory() != null &&
-                             p.getCategory().name().equalsIgnoreCase(category))
-                .map(this::toResponseDTO)
-                .toList();
+        return repo.findByCategory(Category.valueOf(category.toUpperCase()))
+                .stream().map(this::toResponseDTO).toList();
     }
 
     public ProductResponseDTO getById(Long id) {

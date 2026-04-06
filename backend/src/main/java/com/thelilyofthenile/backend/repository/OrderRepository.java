@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByCustomer(Customer customer);
+    java.util.Optional<Order> findByPaymentIntentId(String paymentIntentId);
 }

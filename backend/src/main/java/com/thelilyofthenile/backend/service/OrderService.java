@@ -52,7 +52,6 @@ public class OrderService {
         }
 
         order.setTotalAmount(total);
-        cartRepo.deleteAll(cartItems);
 
         return toResponseDTO(orderRepo.save(order));
     }

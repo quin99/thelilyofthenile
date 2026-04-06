@@ -1,48 +1,47 @@
-<div class="pt-16 min-h-screen">
-  <div class="max-w-4xl mx-auto px-6 py-16">
+<div style="min-height:100vh;padding-top:80px;background:#1a0f0f;">
+  <div style="max-width:900px;margin:0 auto;padding:64px 24px;">
 
-    <div class="flex items-center gap-6 mb-12">
-      <h1 class="font-display text-brand-ivory text-3xl">Your Cart</h1>
-      <div class="flex-1 h-px bg-brand-border"></div>
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:24px;margin-bottom:48px;">
+      <h1 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:300;color:#f5ede0;letter-spacing:.06em;white-space:nowrap;">Your Cart</h1>
+      <div style="flex:1;height:1px;background:#3a2020;"></div>
     </div>
 
     @if (loading()) {
-      <div class="flex justify-center py-24">
-        <div class="w-8 h-8 border border-brand-gold/30 border-t-brand-gold rounded-full animate-spin"></div>
+      <div style="display:flex;justify-content:center;padding:96px 0;">
+        <div style="width:32px;height:32px;border:1px solid rgba(201,169,110,0.3);border-top-color:#c9a96e;border-radius:50%;animation:spin 1s linear infinite;"></div>
       </div>
     } @else if (items().length === 0) {
-      <div class="text-center py-32 border border-brand-border">
-        <p class="font-display text-brand-ivory-dim text-2xl mb-4">Your cart is empty</p>
+      <div style="text-align:center;padding:96px 0;border:1px solid #3a2020;">
+        <p style="font-family:'Playfair Display',serif;font-size:22px;font-weight:300;color:#b8a89a;margin-bottom:24px;">Your cart is empty</p>
         <a routerLink="/flowers"
-           class="inline-block px-8 py-3 border border-brand-gold text-brand-gold text-xs tracking-widest uppercase hover:bg-brand-gold hover:text-brand-bg transition-all duration-200">
+           style="display:inline-block;padding:12px 32px;border:1px solid #c9a96e;color:#c9a96e;font-size:9px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;">
           Start Shopping
         </a>
       </div>
     } @else {
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:48px;align-items:start;">
 
-        <!-- Items -->
-        <div class="lg:col-span-2 flex flex-col gap-0 divide-y divide-brand-border border border-brand-border">
+        <!-- Items list -->
+        <div style="border:1px solid #3a2020;">
           @for (item of items(); track item.id) {
-            <div class="flex gap-4 p-4">
-              <div class="w-20 h-24 bg-brand-raised flex-shrink-0 overflow-hidden">
+            <div style="display:flex;gap:16px;padding:16px;border-bottom:1px solid #3a2020;">
+              <div style="width:80px;height:96px;background:#2e1a1a;flex-shrink:0;overflow:hidden;">
                 @if (item.product.imageUrl) {
-                  <img [src]="item.product.imageUrl" [alt]="item.product.name" class="w-full h-full object-cover">
+                  <img [src]="item.product.imageUrl" [alt]="item.product.name" style="width:100%;height:100%;object-fit:cover;">
                 }
               </div>
-              <div class="flex-1 flex flex-col justify-between py-1">
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0;">
                 <div>
-                  <p class="text-[10px] tracking-widest uppercase text-brand-gold">{{ item.product.category }}</p>
-                  <p class="font-display text-brand-ivory">{{ item.product.name }}</p>
+                  <p style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#c9a96e;margin-bottom:4px;">{{ item.product.category }}</p>
+                  <p style="font-family:'Playfair Display',serif;font-size:16px;font-weight:300;color:#f5ede0;">{{ item.product.name }}</p>
                 </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-brand-ivory text-sm">
-                    {{ item.product.price * item.quantity | currency:'GBP':'symbol':'1.2-2' }}
-                  </span>
-                  <div class="flex items-center gap-3 text-xs text-brand-ivory-dim">
-                    <span>Qty: {{ item.quantity }}</span>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="color:#f5ede0;font-size:14px;">{{ item.product.price * item.quantity | currency:'GBP':'symbol':'1.2-2' }}</span>
+                  <div style="display:flex;align-items:center;gap:16px;">
+                    <span style="font-size:11px;color:#b8a89a;">Qty: {{ item.quantity }}</span>
                     <button (click)="removeItem(item.product.id)"
-                            class="hover:text-brand-blush transition-colors tracking-widest uppercase">
+                            style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;background:none;border:none;cursor:pointer;padding:0;">
                       Remove
                     </button>
                   </div>
@@ -52,31 +51,33 @@
           }
         </div>
 
-        <!-- Summary -->
-        <div class="border border-brand-border p-6 h-fit flex flex-col gap-4">
-          <h2 class="font-display text-brand-ivory text-lg">Order Summary</h2>
-          <div class="h-px bg-brand-border"></div>
-          <div class="flex justify-between text-sm">
-            <span class="text-brand-ivory-dim">Subtotal</span>
-            <span class="text-brand-ivory">{{ total | currency:'GBP':'symbol':'1.2-2' }}</span>
+        <!-- Order summary -->
+        <div style="border:1px solid #3a2020;padding:24px;display:flex;flex-direction:column;gap:16px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:300;color:#f5ede0;">Order Summary</h2>
+          <div style="height:1px;background:#3a2020;"></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span style="color:#b8a89a;">Subtotal</span>
+            <span style="color:#f5ede0;">{{ total | currency:'GBP':'symbol':'1.2-2' }}</span>
           </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-brand-ivory-dim">Shipping</span>
-            <span class="text-brand-ivory-dim">Calculated at checkout</span>
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span style="color:#b8a89a;">Shipping</span>
+            <span style="color:#b8a89a;">Calculated at checkout</span>
           </div>
-          <div class="h-px bg-brand-border"></div>
-          <div class="flex justify-between">
-            <span class="text-brand-ivory font-medium">Total</span>
-            <span class="text-brand-gold font-medium">{{ total | currency:'GBP':'symbol':'1.2-2' }}</span>
+          <div style="height:1px;background:#3a2020;"></div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:#f5ede0;font-weight:500;">Total</span>
+            <span style="color:#c9a96e;font-weight:500;">{{ total | currency:'GBP':'symbol':'1.2-2' }}</span>
           </div>
           <a routerLink="/checkout"
-             class="w-full py-3.5 bg-brand-gold text-brand-bg text-xs tracking-widest uppercase text-center hover:bg-brand-gold-light transition-colors duration-200">
+             style="display:block;width:100%;padding:14px;background:#c9a96e;color:#1a0f0f;font-size:9px;letter-spacing:.2em;text-transform:uppercase;text-align:center;text-decoration:none;font-family:'Raleway',sans-serif;font-weight:500;box-sizing:border-box;">
             Proceed to Checkout
           </a>
-          <a routerLink="/flowers" class="text-[10px] tracking-widest uppercase text-brand-ivory-dim hover:text-brand-ivory transition-colors text-center">
+          <a routerLink="/flowers"
+             style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;text-decoration:none;text-align:center;">
             Continue Shopping
           </a>
         </div>
+
       </div>
     }
   </div>

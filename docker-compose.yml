@@ -1,7 +1,6 @@
-version: '3.8'
 services:
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
     container_name: lily-postgres
     environment:
       POSTGRES_DB: thelilyofthenile_db
@@ -11,20 +10,41 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U thelilyofthenile_user -d thelilyofthenile_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     build: ./backend
     container_name: lily-backend
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/thelilyofthenile_db
-      SPRING_DATASOURCE_USERNAME: thelilyofthenile_user
-      SPRING_DATASOURCE_PASSWORD: thelilyofthenile123!
+      DB_URL: jdbc:postgresql://postgres:5432/thelilyofthenile_db
+      DB_USERNAME: thelilyofthenile_user
+      DB_PASSWORD: thelilyofthenile123!
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production-min-32-chars!!}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
     restart: on-failure
+
+  frontend:
+    image: node:20-alpine
+    container_name: lily-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "4200:4200"
+    command: sh -c "npm install && npm start -- --host 0.0.0.0 --poll 500"
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
-

@@ -12,5 +12,6 @@ import { Product } from '../../../core/models/product.model';
 })
 export class ProductCardComponent {
   product = input.required<Product>();
+  justAdded = input(false);
   addToCart = output<Product>();
 }

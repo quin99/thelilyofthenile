@@ -1,39 +1,44 @@
-<footer class="border-t border-brand-border mt-24">
-  <div class="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+<footer style="background:#4a2e2e;padding:80px 64px 36px;">
+  <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px;">
 
     <div>
-      <p class="font-display text-brand-ivory text-lg mb-3">The Lily of the Nile</p>
-      <p class="text-brand-ivory-dim text-sm leading-relaxed">
-        Botanicals for those who seek<br>beauty in every detail.
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:300;letter-spacing:.08em;color:#faf6f1;margin-bottom:14px;">
+        The <em style="font-style:italic;color:#e8c4b8;">Lily</em> of the Nile
+      </div>
+      <p style="font-size:12px;color:rgba(250,246,241,.38);line-height:1.8;font-weight:300;max-width:220px;">
+        Handcrafted florals, bracelets &amp; trinkets for women who celebrate beauty in every moment.
       </p>
     </div>
 
-    <div>
-      <p class="text-xs tracking-widest uppercase text-brand-ivory mb-4">Shop</p>
-      <ul class="flex flex-col gap-2">
-        @for (link of shopLinks; track link.path) {
-          <li>
-            <a [routerLink]="link.path" class="text-sm text-brand-ivory-dim hover:text-brand-gold transition-colors">
-              {{ link.label }}
-            </a>
-          </li>
-        }
-      </ul>
-    </div>
-
-    <div>
-      <p class="text-xs tracking-widest uppercase text-brand-ivory mb-4">Account</p>
-      <ul class="flex flex-col gap-2">
-        <li><a routerLink="/account" class="text-sm text-brand-ivory-dim hover:text-brand-gold transition-colors">Sign In</a></li>
-        <li><a routerLink="/account" class="text-sm text-brand-ivory-dim hover:text-brand-gold transition-colors">Register</a></li>
-        <li><a routerLink="/cart" class="text-sm text-brand-ivory-dim hover:text-brand-gold transition-colors">Cart</a></li>
-      </ul>
-    </div>
+    @for (col of footerColumns; track col.heading) {
+      <div>
+        <p style="font-size:8px;letter-spacing:.32em;text-transform:uppercase;color:#e8c4b8;margin-bottom:22px;font-weight:400;">
+          {{ col.heading }}
+        </p>
+        <ul style="list-style:none;">
+          @for (link of col.links; track link.label) {
+            <li style="margin-bottom:11px;">
+              <a [routerLink]="link.path"
+                 style="font-size:12px;color:rgba(250,246,241,.42);text-decoration:none;letter-spacing:.05em;font-weight:300;transition:color .3s;">
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
   </div>
 
-  <div class="border-t border-brand-border">
-    <p class="max-w-7xl mx-auto px-6 py-6 text-xs text-brand-ivory-dim">
+  <div style="border-top:1px solid rgba(232,196,184,.12);padding-top:28px;display:flex;justify-content:space-between;align-items:center;">
+    <p style="font-size:10px;color:rgba(250,246,241,.2);letter-spacing:.1em;font-weight:300;">
       &copy; {{ year }} The Lily of the Nile. All rights reserved.
     </p>
+    <div style="display:flex;gap:10px;">
+      @for (badge of ['Visa', 'Mastercard', 'Apple Pay', 'Stripe']; track badge) {
+        <span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,246,241,.28);border:1px solid rgba(232,196,184,.15);padding:5px 10px;">
+          {{ badge }}
+        </span>
+      }
+    </div>
   </div>
 </footer>

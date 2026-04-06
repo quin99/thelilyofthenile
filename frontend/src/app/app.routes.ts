@@ -52,5 +52,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/account/account-page/account-page.component').then(c => c.AccountPageComponent),
   },
-  { path: '**', redirectTo: '' },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./features/not-found/not-found.component').then(c => c.NotFoundComponent),
+  },
 ];

@@ -23,6 +23,10 @@ export class NavComponent {
     { label: 'Seasonal',     path: '/seasonal' },
   ];
 
+  logout() {
+    this.auth.logout();
+  }
+
   @HostListener('window:scroll')
   onScroll() {
     this.scrolled.set(window.scrollY > 40);

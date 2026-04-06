@@ -4,7 +4,6 @@ import com.thelilyofthenile.backend.dto.OrderResponseDTO;
 import com.thelilyofthenile.backend.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,13 +20,13 @@ public class OrderController {
 
     @PostMapping("/place")
     public ResponseEntity<OrderResponseDTO> placeOrder(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(orderService.placeOrder(userDetails.getUsername()));
+            @AuthenticationPrincipal String email) {
+        return ResponseEntity.ok(orderService.placeOrder(email));
     }
 
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> getOrders(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(orderService.getOrders(userDetails.getUsername()));
+            @AuthenticationPrincipal String email) {
+        return ResponseEntity.ok(orderService.getOrders(email));
     }
 }

@@ -4,6 +4,19 @@
   --font-display: 'Playfair Display', serif;
   --font-sans:    'Raleway', sans-serif;
 
+  /* ── Brand design tokens (used throughout all components) ── */
+  --color-brand-bg:         #1a0f0f;
+  --color-brand-surface:    #261414;
+  --color-brand-raised:     #2e1a1a;
+  --color-brand-border:     #3a2020;
+  --color-brand-ivory:      #f5ede0;
+  --color-brand-ivory-dim:  #b8a89a;
+  --color-brand-gold:       #c9a96e;
+  --color-brand-gold-light: #dcc598;
+  --color-brand-blush:      #e8b4a0;
+  --color-brand-sage:       #7aaa78;
+
+  /* ── Palette aliases ── */
   --color-blush-deep:    #c4877a;
   --color-blush:         #d9a89b;
   --color-blush-mid:     #e8c4b8;
@@ -11,16 +24,12 @@
   --color-blush-pale:    #faf0ec;
   --color-champagne:     #e8d5b0;
   --color-champagne-mid: #f0e4c8;
-  --color-champagne-pale:#faf4e8;
   --color-rose-gold:     #b8846a;
-  --color-rose-gold-mid: #c99a82;
   --color-cream:         #faf6f1;
   --color-ivory:         #fdf9f5;
   --color-mauve:         #4a2e2e;
   --color-mauve-mid:     #6b3f3f;
   --color-mauve-light:   #8a5a5a;
-  --color-text-soft:     #9a7070;
-  --color-text-muted:    #b89898;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,8 +38,8 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Raleway', sans-serif;
-  background: #fdf9f5;
-  color: #4a2e2e;
+  background: #1a0f0f;
+  color: #f5ede0;
   overflow-x: hidden;
   cursor: none;
 }

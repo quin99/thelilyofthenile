@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Category, Product } from '../../../core/models/product.model';
 
 @Component({
@@ -15,11 +16,14 @@ import { Category, Product } from '../../../core/models/product.model';
 export class CatalogPageComponent implements OnInit {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
+  private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   products = signal<Product[]>([]);
   loading = signal(true);
   activeCategory = signal<Category | null>(null);
+  addedProductId = signal<number | null>(null);
 
   categories: { label: string; value: Category }[] = [
     { label: 'Flowers',   value: 'FLOWERS' },
@@ -51,6 +55,15 @@ export class CatalogPageComponent implements OnInit {
   }
 
   onAddToCart(product: Product) {
-    this.cartService.addItem(product.id, 1).subscribe();
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/account'], { queryParams: { redirect: 'cart' } });
+      return;
+    }
+    this.cartService.addItem(product.id, 1).subscribe({
+      next: () => {
+        this.addedProductId.set(product.id);
+        setTimeout(() => this.addedProductId.set(null), 1500);
+      },
+    });
   }
 }

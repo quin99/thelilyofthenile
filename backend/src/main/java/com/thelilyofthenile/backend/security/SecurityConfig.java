@@ -24,6 +24,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/customers/**").permitAll()
                         .requestMatchers("/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/v1/payments/webhook").permitAll()
+                        .requestMatchers("/api/v1/payments/**").authenticated()
                         .requestMatchers("/api/v1/cart/**").authenticated()
                         .requestMatchers("/api/v1/orders/**").authenticated()
                         .anyRequest().authenticated()

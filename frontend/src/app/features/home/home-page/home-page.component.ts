@@ -1,8 +1,9 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Product } from '../../../core/models/product.model';
 
 @Component({
@@ -15,6 +16,8 @@ import { Product } from '../../../core/models/product.model';
 export class HomePageComponent implements OnInit, AfterViewInit {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   featured = signal<Product[]>([]);
 
@@ -53,6 +56,21 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   }
 
   onAddToCart(productId: number) {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/account'], { queryParams: { redirect: 'cart' } });
+      return;
+    }
     this.cartService.addItem(productId, 1).subscribe();
+  }
+
+  gridStyle(i: number): string {
+    const styles = [
+      'grid-column:1/6;grid-row:1/3;',
+      'grid-column:6/9;grid-row:1/2;',
+      'grid-column:9/13;grid-row:1/2;',
+      'grid-column:6/10;grid-row:2/3;',
+      'grid-column:10/13;grid-row:2/3;',
+    ];
+    return styles[i] ?? '';
   }
 }

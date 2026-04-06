@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -13,10 +13,12 @@ import { AuthService } from '../../../core/services/auth.service';
 export class AccountPageComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   tab = signal<'login' | 'register'>('login');
   error = signal('');
   loading = signal(false);
+  registered = signal(false);
 
   loginForm = { email: '', password: '' };
   registerForm = { username: '', email: '', password: '' };
@@ -25,7 +27,10 @@ export class AccountPageComponent {
     this.error.set('');
     this.loading.set(true);
     this.auth.login(this.loginForm).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => {
+        const redirect = this.route.snapshot.queryParamMap.get('redirect');
+        this.router.navigate([redirect ? `/${redirect}` : '/']);
+      },
       error: () => {
         this.error.set('Invalid email or password.');
         this.loading.set(false);
@@ -37,12 +42,16 @@ export class AccountPageComponent {
     this.error.set('');
     this.loading.set(true);
     this.auth.register(this.registerForm).subscribe({
-      next: () => this.tab.set('login'),
+      next: () => {
+        this.registered.set(true);
+        this.loginForm.email = this.registerForm.email;
+        this.tab.set('login');
+        this.loading.set(false);
+      },
       error: () => {
         this.error.set('Registration failed. Please try again.');
         this.loading.set(false);
       },
-      complete: () => this.loading.set(false),
     });
   }
 }
