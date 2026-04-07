@@ -6,6 +6,7 @@ import com.thelilyofthenile.backend.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,32 +22,27 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> getAll(
-            @RequestParam(required = false) String category) {
-        List<ProductResponseDTO> products = category != null
-                ? service.getByCategory(category)
-                : service.getAll();
-        return ResponseEntity.ok(products);
+    public ResponseEntity<List<ProductResponseDTO>> getProducts() {
+        return ResponseEntity.ok(service.getAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> getById(@PathVariable Long id) {
-        ProductResponseDTO product = service.getById(id);
-        if (product == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(product);
+    // Create Product
+    @PostMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<ProductResponseDTO> create(
+            @RequestPart("product") @Valid ProductRequestDTO dto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        return ResponseEntity.ok(service.create(dto, image));
     }
 
-    @PostMapping
-    public ResponseEntity<ProductResponseDTO> create(@Valid @RequestBody ProductRequestDTO dto) {
-        return ResponseEntity.ok(service.create(dto));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> update(@PathVariable Long id,
-                                                     @Valid @RequestBody ProductRequestDTO dto) {
-        ProductResponseDTO updated = service.update(id, dto);
-        if (updated == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(updated);
+    // Update Product
+    @PutMapping(value = "/{id}", consumes = { "multipart/form-data" })
+    public ResponseEntity<ProductResponseDTO> update(
+            @PathVariable Long id,
+            @RequestPart("product") @Valid ProductRequestDTO dto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        return ResponseEntity.ok(service.update(id, dto, image));
     }
 
     @DeleteMapping("/{id}")

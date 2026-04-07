@@ -17,6 +17,10 @@ spring:
   sql:
     init:
       mode: always
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
 
 server:
   port: 8080
@@ -27,3 +31,10 @@ jwt:
 stripe:
   secret-key: ${STRIPE_SECRET_KEY:}
   webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+
+uploads:
+  dir: ${UPLOADS_DIR:/app/uploads}
+
+admin:
+  email: ${ADMIN_EMAIL:admin@thelilyofthenile.com}
+  password: ${ADMIN_PASSWORD:changeme-admin-password}

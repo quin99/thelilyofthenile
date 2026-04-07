@@ -26,6 +26,7 @@ public class CustomerService {
                 .username(dto.getUsername())
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
+                .role("CUSTOMER")
                 .build();
         Customer saved = repo.save(customer);
         return toResponseDTO(saved);
@@ -34,7 +35,7 @@ public class CustomerService {
     public String login(CustomerLoginDTO dto) {
         return repo.findByEmail(dto.getEmail())
                 .filter(c -> encoder.matches(dto.getPassword(), c.getPassword()))
-                .map(c -> jwtUtil.generateToken(c.getEmail()))
+                .map(c -> jwtUtil.generateToken(c.getEmail(), c.getRole()))
                 .orElse(null);
     }
 

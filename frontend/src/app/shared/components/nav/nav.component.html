@@ -1,15 +1,11 @@
 <nav
-  [style.background]="scrolled() ? 'rgba(26,15,15,0.92)' : 'transparent'"
   [style.padding]="scrolled() ? '20px 64px' : '32px 64px'"
-  [style.box-shadow]="scrolled() ? '0 1px 0 rgba(58,32,32,0.6)' : 'none'"
-  [style.backdrop-filter]="scrolled() ? 'blur(12px)' : 'none'"
-  style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;transition:background .5s,padding .4s,box-shadow .4s;">
+  style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;background:rgba(26,15,15,1);box-shadow:0 1px 0 rgba(58,32,32,0.6);transition:padding .4s;">
 
   <!-- Logo -->
   <a routerLink="/"
-     style="font-family:'Playfair Display',serif;font-size:20px;font-weight:300;letter-spacing:.14em;text-decoration:none;transition:color .4s;"
-     [style.color]="scrolled() ? '#4a2e2e' : '#f5ede0'">
-    The <em style="font-style:italic;" [style.color]="scrolled() ? '#b8846a' : '#c9a96e'">Lily</em> of the Nile
+     style="font-family:'Playfair Display',serif;font-size:20px;font-weight:300;letter-spacing:.14em;text-decoration:none;color:#f5ede0;">
+     <em style="font-style:italic;color:#c9a96e;">The Lily of the Nile </em>
   </a>
 
   <!-- Desktop links -->
@@ -20,7 +16,7 @@
            style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;font-weight:400;transition:color .3s;"
            routerLinkActive
            #rla="routerLinkActive"
-           [style.color]="rla.isActive ? '#c9a96e' : (scrolled() ? '#9a7070' : 'rgba(245,237,224,0.65)')">
+           [style.color]="rla.isActive ? '#c9a96e' : 'rgba(245,237,224,0.65)'">
           {{ link.label }}
         </a>
       </li>
@@ -30,8 +26,7 @@
   <!-- Right -->
   <div style="display:flex;align-items:center;gap:20px;">
     <a routerLink="/cart"
-       style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:8px;font-weight:400;transition:color .4s;"
-       [style.color]="scrolled() ? '#4a2e2e' : '#f5ede0'">
+       style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:8px;font-weight:400;color:#f5ede0;">
       Cart
       @if (cart.itemCount() > 0) {
         <span style="width:16px;height:16px;border-radius:50%;background:#c9a96e;color:#1a0f0f;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:500;">
@@ -39,16 +34,20 @@
         </span>
       }
     </a>
+    @if (auth.isAdmin()) {
+      <a routerLink="/admin"
+         style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;font-weight:400;color:rgba(245,237,224,0.65);">
+        Admin
+      </a>
+    }
     @if (auth.isLoggedIn()) {
       <button (click)="logout()"
-              style="background:none;border:none;cursor:none;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:400;transition:color .4s;"
-              [style.color]="scrolled() ? '#9a7070' : 'rgba(245,237,224,0.65)'">
+              style="background:none;border:none;cursor:pointer;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:400;color:rgba(245,237,224,0.65);">
         Sign Out
       </button>
     } @else {
       <a routerLink="/account"
-         style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;font-weight:400;transition:color .4s;"
-         [style.color]="scrolled() ? '#9a7070' : 'rgba(245,237,224,0.65)'">
+         style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;font-weight:400;color:rgba(245,237,224,0.65);">
         Account
       </a>
     }

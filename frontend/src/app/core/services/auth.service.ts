@@ -8,6 +8,7 @@ import { CustomerRegister, CustomerResponse } from '../models/customer.model';
 export class AuthService {
   private readonly tokenKey = 'auth_token';
   readonly isLoggedIn = signal(this.hasToken());
+  readonly isAdmin = signal(this.checkAdmin());
 
   constructor(private http: HttpClient) {}
 
@@ -17,6 +18,7 @@ export class AuthService {
       .pipe(tap(token => {
         localStorage.setItem(this.tokenKey, token);
         this.isLoggedIn.set(true);
+        this.isAdmin.set(this.checkAdmin());
       }));
   }
 
@@ -30,6 +32,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.tokenKey);
     this.isLoggedIn.set(false);
+    this.isAdmin.set(false);
   }
 
   token(): string {
@@ -38,5 +41,16 @@ export class AuthService {
 
   private hasToken(): boolean {
     return !!localStorage.getItem(this.tokenKey);
+  }
+
+  private checkAdmin(): boolean {
+    const token = localStorage.getItem(this.tokenKey);
+    if (!token) return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.role === 'ADMIN';
+    } catch {
+      return false;
+    }
   }
 }

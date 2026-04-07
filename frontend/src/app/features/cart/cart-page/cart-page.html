@@ -37,7 +37,7 @@
                   <p style="font-family:'Playfair Display',serif;font-size:16px;font-weight:300;color:#f5ede0;">{{ item.product.name }}</p>
                 </div>
                 <div style="display:flex;align-items:center;justify-content:space-between;">
-                  <span style="color:#f5ede0;font-size:14px;">{{ item.product.price * item.quantity | currency:'GBP':'symbol':'1.2-2' }}</span>
+                  <span style="color:#f5ede0;font-size:14px;">{{ item.product.price * item.quantity | currency:'USD':'symbol':'1.2-2' }}</span>
                   <div style="display:flex;align-items:center;gap:16px;">
                     <span style="font-size:11px;color:#b8a89a;">Qty: {{ item.quantity }}</span>
                     <button (click)="removeItem(item.product.id)"
@@ -57,7 +57,7 @@
           <div style="height:1px;background:#3a2020;"></div>
           <div style="display:flex;justify-content:space-between;font-size:13px;">
             <span style="color:#b8a89a;">Subtotal</span>
-            <span style="color:#f5ede0;">{{ total | currency:'GBP':'symbol':'1.2-2' }}</span>
+            <span style="color:#f5ede0;">{{ total | currency:'USD':'symbol':'1.2-2' }}</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:13px;">
             <span style="color:#b8a89a;">Shipping</span>
@@ -66,7 +66,7 @@
           <div style="height:1px;background:#3a2020;"></div>
           <div style="display:flex;justify-content:space-between;">
             <span style="color:#f5ede0;font-weight:500;">Total</span>
-            <span style="color:#c9a96e;font-weight:500;">{{ total | currency:'GBP':'symbol':'1.2-2' }}</span>
+            <span style="color:#c9a96e;font-weight:500;">{{ total | currency:'USD':'symbol':'1.2-2' }}</span>
           </div>
           <a routerLink="/checkout"
              style="display:block;width:100%;padding:14px;background:#c9a96e;color:#1a0f0f;font-size:9px;letter-spacing:.2em;text-transform:uppercase;text-align:center;text-decoration:none;font-family:'Raleway',sans-serif;font-weight:500;box-sizing:border-box;">

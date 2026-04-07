@@ -31,6 +31,11 @@ services:
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production-min-32-chars!!}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      UPLOADS_DIR: /app/uploads
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@thelilyofthenile.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme-admin-password}
+    volumes:
+      - uploads_data:/app/uploads
     restart: on-failure
 
   frontend:
@@ -48,3 +53,4 @@ services:
 
 volumes:
   postgres_data:
+  uploads_data:

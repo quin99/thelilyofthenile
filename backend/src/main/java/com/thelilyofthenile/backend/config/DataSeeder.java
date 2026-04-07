@@ -1,10 +1,14 @@
 package com.thelilyofthenile.backend.config;
 
 import com.thelilyofthenile.backend.model.Category;
+import com.thelilyofthenile.backend.model.Customer;
 import com.thelilyofthenile.backend.model.Product;
+import com.thelilyofthenile.backend.repository.CustomerRepository;
 import com.thelilyofthenile.backend.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,13 +17,23 @@ import java.util.List;
 public class DataSeeder implements ApplicationRunner {
 
     private final ProductRepository productRepo;
+    private final CustomerRepository customerRepo;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public DataSeeder(ProductRepository productRepo) {
+    @Value("${admin.email:admin@thelilyofthenile.com}")
+    private String adminEmail;
+
+    @Value("${admin.password:changeme-admin-password}")
+    private String adminPassword;
+
+    public DataSeeder(ProductRepository productRepo, CustomerRepository customerRepo) {
         this.productRepo = productRepo;
+        this.customerRepo = customerRepo;
     }
 
     @Override
     public void run(ApplicationArguments args) {
+        seedAdmin();
         if (productRepo.count() > 0) return;
 
         productRepo.saveAll(List.of(
@@ -27,7 +41,7 @@ public class DataSeeder implements ApplicationRunner {
                 .name("Nile Lily Bouquet")
                 .description("A lush arrangement of white agapanthus and soft greenery, evoking the serenity of the Nile.")
                 .price(48.00)
-                .imageUrl("https://images.unsplash.com/photo-1490750967868-88df5691cc2c?w=600&q=80")
+                .imageUrl("https://images.unsplash.com/photo-1561848355-890d054dc55a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
                 .category(Category.FLOWERS)
                 .stock(10)
                 .build(),
@@ -51,7 +65,7 @@ public class DataSeeder implements ApplicationRunner {
                 .name("Gold Lotus Bracelet")
                 .description("Delicate gold-fill chain with a hand-stamped lotus charm. Adjustable fit.")
                 .price(28.00)
-                .imageUrl("https://images.unsplash.com/photo-1573408301185-9519f94815b2?w=600&q=80")
+                .imageUrl("https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
                 .category(Category.BRACELETS)
                 .stock(20)
                 .build(),
@@ -88,5 +102,16 @@ public class DataSeeder implements ApplicationRunner {
                 .stock(6)
                 .build()
         ));
+    }
+
+    private void seedAdmin() {
+        if (customerRepo.findByEmail(adminEmail).isEmpty()) {
+            customerRepo.save(Customer.builder()
+                    .username("admin")
+                    .email(adminEmail)
+                    .password(encoder.encode(adminPassword))
+                    .role("ADMIN")
+                    .build());
+        }
     }
 }

@@ -32,7 +32,7 @@
       {{ product().name }}
     </a>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
-      <span style="color:#f5ede0;font-size:13px;">{{ product().price | currency:'GBP':'symbol':'1.2-2' }}</span>
+      <span style="color:#f5ede0;font-size:13px;">{{ product().price | currency:'USD':'symbol':'1.2-2' }}</span>
       <button
         (click)="addToCart.emit(product())"
         [disabled]="product().stock === 0"

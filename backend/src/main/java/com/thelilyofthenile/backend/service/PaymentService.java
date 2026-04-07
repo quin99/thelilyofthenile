@@ -48,7 +48,8 @@ public class PaymentService {
 
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(amountInSmallestUnit)
-                .setCurrency("gbp")
+                .setCurrency("usd")
+                .addPaymentMethodType("card")
                 .putMetadata("orderId", orderId.toString())
                 .build();
 
