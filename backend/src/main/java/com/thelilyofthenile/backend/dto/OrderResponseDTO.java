@@ -14,4 +14,6 @@ public class OrderResponseDTO {
     private String paymentIntentId;
     private LocalDateTime createdAt;
     private List<OrderItemDTO> items;
+    private String customerName;
+    private String customerEmail;
 }

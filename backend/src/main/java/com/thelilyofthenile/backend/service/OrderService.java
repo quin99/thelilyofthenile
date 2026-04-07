@@ -61,6 +61,20 @@ public class OrderService {
         return orderRepo.findByCustomer(customer).stream().map(this::toResponseDTO).toList();
     }
 
+    public List<OrderResponseDTO> getAllOrders() {
+        return orderRepo.findAll().stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
+    public OrderResponseDTO updateStatus(Long id, String status) {
+        Order order = orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(status);
+        return toResponseDTO(orderRepo.save(order));
+    }
+
     private OrderResponseDTO toResponseDTO(Order order) {
         OrderResponseDTO dto = new OrderResponseDTO();
         dto.setId(order.getId());
@@ -69,6 +83,8 @@ public class OrderService {
         dto.setPaymentIntentId(order.getPaymentIntentId());
         dto.setCreatedAt(order.getCreatedAt());
         dto.setItems(order.getItems().stream().map(this::toItemDTO).toList());
+        dto.setCustomerName(order.getCustomer().getUsername());
+        dto.setCustomerEmail(order.getCustomer().getEmail());
         return dto;
     }
 

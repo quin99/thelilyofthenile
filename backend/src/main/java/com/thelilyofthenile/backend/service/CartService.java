@@ -26,13 +26,16 @@ public class CartService {
     }
 
     public List<CartItem> getCart(String email) {
-        Customer customer = customerRepo.findByEmail(email).orElseThrow();
+        Customer customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found: " + email));
         return cartItemRepo.findByCustomer(customer);
     }
 
     public CartItem addItem(String email, Long productId, int quantity) {
-        Customer customer = customerRepo.findByEmail(email).orElseThrow();
-        Product product = productRepo.findById(productId).orElseThrow();
+        Customer customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found: " + email));
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
 
         CartItem item = cartItemRepo.findByCustomerAndProduct(customer, product)
                 .orElse(new CartItem());
@@ -44,14 +47,17 @@ public class CartService {
     }
 
     public void removeItem(String email, Long productId) {
-        Customer customer = customerRepo.findByEmail(email).orElseThrow();
-        Product product = productRepo.findById(productId).orElseThrow();
+        Customer customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found: " + email));
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
         cartItemRepo.findByCustomerAndProduct(customer, product)
                 .ifPresent(cartItemRepo::delete);
     }
 
     public void clearCart(String email) {
-        Customer customer = customerRepo.findByEmail(email).orElseThrow();
+        Customer customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found: " + email));
         cartItemRepo.deleteAll(cartItemRepo.findByCustomer(customer));
     }
 }

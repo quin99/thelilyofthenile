@@ -12,4 +12,6 @@ export interface Order {
   paymentIntentId: string | null;
   createdAt: string;
   items: OrderItem[];
+  customerName?: string;
+  customerEmail?: string;
 }

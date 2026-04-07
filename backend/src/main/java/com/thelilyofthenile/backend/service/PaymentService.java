@@ -13,11 +13,13 @@ import com.thelilyofthenile.backend.repository.OrderRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentService {
 
     private final OrderRepository orderRepo;
+    private final EmailService emailService;
 
     @Value("${stripe.secret-key:}")
     private String stripeSecretKey;
@@ -25,8 +27,9 @@ public class PaymentService {
     @Value("${stripe.webhook-secret:}")
     private String webhookSecret;
 
-    public PaymentService(OrderRepository orderRepo) {
+    public PaymentService(OrderRepository orderRepo, EmailService emailService) {
         this.orderRepo = orderRepo;
+        this.emailService = emailService;
     }
 
     @PostConstruct
@@ -63,6 +66,7 @@ public class PaymentService {
         return dto;
     }
 
+    @Transactional
     public void handleWebhook(String payload, String sigHeader) throws StripeException {
         if (webhookSecret == null || webhookSecret.isBlank()) {
             return;
@@ -77,14 +81,14 @@ public class PaymentService {
 
         if ("payment_intent.succeeded".equals(event.getType())) {
             PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer()
-                    .getObject()
-                    .orElseThrow(() -> new RuntimeException("Could not deserialize PaymentIntent"));
+                    .deserializeUnsafe();
 
             String orderIdStr = intent.getMetadata().get("orderId");
             if (orderIdStr != null) {
                 orderRepo.findById(Long.parseLong(orderIdStr)).ifPresent(order -> {
                     order.setStatus("PAID");
                     orderRepo.save(order);
+                    emailService.sendOrderConfirmation(order);
                 });
             }
         }

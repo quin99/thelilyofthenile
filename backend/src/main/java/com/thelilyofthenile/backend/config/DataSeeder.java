@@ -37,69 +37,117 @@ public class DataSeeder implements ApplicationRunner {
         if (productRepo.count() > 0) return;
 
         productRepo.saveAll(List.of(
+
+            // ── Flowers ──────────────────────────────────────────────────────
             Product.builder()
-                .name("Nile Lily Bouquet")
-                .description("A lush arrangement of white agapanthus and soft greenery, evoking the serenity of the Nile.")
-                .price(48.00)
-                .imageUrl("https://images.unsplash.com/photo-1561848355-890d054dc55a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+                .name("Nile Garden Bouquet")
+                .description("A lush, hand-tied arrangement of garden roses, eucalyptus, and seasonal blooms — perfect for any occasion.")
+                .price(85.00)
+                .imageUrl("https://images.unsplash.com/photo-1464983308776-3c7215084895?w=800&q=80&auto=format&fit=crop")
                 .category(Category.FLOWERS)
-                .stock(10)
+                .stock(12)
                 .build(),
+
             Product.builder()
-                .name("Blush Peony Bundle")
-                .description("Soft blush peonies tied with ivory ribbon — timeless and romantic.")
-                .price(55.00)
-                .imageUrl("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80")
+                .name("Rose Blush Arrangement")
+                .description("Soft blush and ivory roses gathered with delicate greenery, wrapped in our signature kraft and ribbon.")
+                .price(72.00)
+                .imageUrl("https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=800&q=80&auto=format&fit=crop")
                 .category(Category.FLOWERS)
                 .stock(8)
                 .build(),
+
             Product.builder()
-                .name("Dried Wildflower Posy")
-                .description("A hand-tied posy of dried lavender, wheat stalks, and cotton stems. Everlasting.")
-                .price(32.00)
-                .imageUrl("https://images.unsplash.com/photo-1471086569966-db3eebc25a59?w=600&q=80")
+                .name("Wildflower Mix")
+                .description("A free-spirited mix of seasonal wildflowers in a rustic wrap — cheerful, fragrant, and effortlessly beautiful.")
+                .price(58.00)
+                .imageUrl("https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=800&q=80&auto=format&fit=crop")
                 .category(Category.FLOWERS)
                 .stock(15)
                 .build(),
+
             Product.builder()
-                .name("Gold Lotus Bracelet")
-                .description("Delicate gold-fill chain with a hand-stamped lotus charm. Adjustable fit.")
-                .price(28.00)
-                .imageUrl("https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
-                .category(Category.BRACELETS)
+                .name("White Orchid Stem")
+                .description("A single Phalaenopsis orchid stem, elegantly arranged in a clear bud vase — long-lasting and timeless.")
+                .price(48.00)
+                .imageUrl("https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=800&q=80&auto=format&fit=crop")
+                .category(Category.FLOWERS)
                 .stock(20)
                 .build(),
+
             Product.builder()
-                .name("Pearl & Rose Quartz Bracelet")
-                .description("Freshwater pearls and rose quartz on silk cord — elegant and wearable every day.")
-                .price(34.00)
-                .imageUrl("https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600&q=80")
-                .category(Category.BRACELETS)
-                .stock(12)
+                .name("Lotus Centerpiece")
+                .description("A statement arrangement of lotus blooms, magnolia leaves, and gilded branches for the modern home.")
+                .price(120.00)
+                .imageUrl("https://images.unsplash.com/photo-1490750967868-88df5691cc9b?w=800&q=80&auto=format&fit=crop")
+                .category(Category.FLOWERS)
+                .stock(6)
                 .build(),
+
+            // ── Bracelets ────────────────────────────────────────────────────
             Product.builder()
-                .name("Pressed Flower Resin Pendant")
-                .description("Real lily and fern pressed in clear resin. No two are exactly alike.")
-                .price(18.00)
-                .imageUrl("https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=600&q=80")
-                .category(Category.TRINKETS)
+                .name("Gold Lotus Bracelet")
+                .description("Delicate 18k gold-plated chain with a hand-set lotus charm — inspired by the waters of the Nile.")
+                .price(48.00)
+                .imageUrl("https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=800&q=80&auto=format&fit=crop")
+                .category(Category.BRACELETS)
                 .stock(25)
                 .build(),
+
             Product.builder()
-                .name("Botanical Wax Seal Kit")
-                .description("Wax seal stamps and rose-gold wax sticks, perfect for correspondence and gifting.")
-                .price(22.00)
-                .imageUrl("https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?w=600&q=80")
-                .category(Category.TRINKETS)
+                .name("Pearl Bloom Cuff")
+                .description("A statement cuff adorned with freshwater pearls and floral enamel accents — feminine and bold.")
+                .price(65.00)
+                .imageUrl("https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&q=80&auto=format&fit=crop")
+                .category(Category.BRACELETS)
                 .stock(18)
                 .build(),
+
             Product.builder()
-                .name("Autumn Harvest Wreath")
-                .description("A full wreath of dried amaranth, mini pumpkins, and eucalyptus for the season.")
-                .price(68.00)
-                .imageUrl("https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=600&q=80")
+                .name("Floral Charm Bracelet")
+                .description("A dainty chain with seven interchangeable floral charms in rose gold — stack it or wear it alone.")
+                .price(34.00)
+                .imageUrl("https://images.unsplash.com/photo-1599751449128-eb7249c3d6b1?w=800&q=80&auto=format&fit=crop")
+                .category(Category.BRACELETS)
+                .stock(30)
+                .build(),
+
+            // ── Trinkets ─────────────────────────────────────────────────────
+            Product.builder()
+                .name("Nile Moon Pendant")
+                .description("A crescent moon pendant in sterling silver with a pressed flower resin centre — wearable art.")
+                .price(52.00)
+                .imageUrl("https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80&auto=format&fit=crop")
+                .category(Category.TRINKETS)
+                .stock(22)
+                .build(),
+
+            Product.builder()
+                .name("Pressed Flower Frame")
+                .description("A hand-pressed botanical arrangement sealed behind glass in a gilded frame — ready to hang or display.")
+                .price(38.00)
+                .imageUrl("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80&auto=format&fit=crop")
+                .category(Category.TRINKETS)
+                .stock(14)
+                .build(),
+
+            Product.builder()
+                .name("Floral Wax Seal Set")
+                .description("A set of three botanical wax seal stamps with gold sealing wax — perfect for letters and gift wrapping.")
+                .price(28.00)
+                .imageUrl("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&auto=format&fit=crop")
+                .category(Category.TRINKETS)
+                .stock(40)
+                .build(),
+
+            // ── Seasonal ─────────────────────────────────────────────────────
+            Product.builder()
+                .name("Spring Garden Collection")
+                .description("A curated seasonal bundle: a fresh arrangement, a floral charm, and a botanical candle — gift-wrapped with care.")
+                .price(138.00)
+                .imageUrl("https://images.unsplash.com/photo-1464983308776-3c7215084895?w=800&q=80&auto=format&fit=crop")
                 .category(Category.SEASONAL)
-                .stock(6)
+                .stock(10)
                 .build()
         ));
     }

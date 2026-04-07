@@ -1,91 +1,173 @@
-<div style="min-height:100vh;padding-top:80px;display:flex;align-items:center;justify-content:center;padding-left:24px;padding-right:24px;background:#1a0f0f;">
-  <div style="width:100%;max-width:420px;">
+<div style="min-height:100vh;padding-top:80px;background:#1a0f0f;">
 
-    <!-- Header -->
-    <div style="text-align:center;margin-bottom:40px;">
-      <p style="font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:#c9a96e;margin-bottom:12px;">Welcome</p>
-      <h1 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:300;color:#f5ede0;letter-spacing:.06em;">Your Account</h1>
-    </div>
+  <!-- ── Logged-in view ── -->
+  @if (isLoggedIn()) {
+    <div style="max-width:860px;margin:0 auto;padding:64px 24px;">
 
-    <!-- Tab toggle -->
-    <div style="display:flex;border:1px solid #3a2020;margin-bottom:32px;">
-      <button (click)="tab.set('login')"
-              style="flex:1;padding:12px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;transition:background .2s,color .2s;"
-              [style.background]="tab() === 'login' ? '#261414' : 'transparent'"
-              [style.color]="tab() === 'login' ? '#f5ede0' : '#b8a89a'">
-        Sign In
-      </button>
-      <button (click)="tab.set('register')"
-              style="flex:1;padding:12px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;border-left:1px solid #3a2020;cursor:pointer;transition:background .2s,color .2s;"
-              [style.background]="tab() === 'register' ? '#261414' : 'transparent'"
-              [style.color]="tab() === 'register' ? '#f5ede0' : '#b8a89a'">
-        Register
-      </button>
-    </div>
-
-    <!-- Success banner -->
-    @if (registered()) {
-      <p style="font-size:11px;text-align:center;margin-bottom:24px;border:1px solid rgba(201,169,110,.3);padding:12px;color:#c9a96e;letter-spacing:.05em;">
-        Account created — sign in below.
-      </p>
-    }
-
-    <!-- Error banner -->
-    @if (error()) {
-      <p style="font-size:11px;text-align:center;margin-bottom:24px;color:#e8b4a0;">{{ error() }}</p>
-    }
-
-    <!-- Login form -->
-    @if (tab() === 'login') {
-      <form (ngSubmit)="login()" style="display:flex;flex-direction:column;gap:16px;">
+      <!-- Header -->
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px;">
         <div>
-          <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Email</label>
-          <input type="email" [(ngModel)]="loginForm.email" name="email" required
-                 placeholder="your@email.com"
-                 style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
+          <p style="font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:#c9a96e;margin-bottom:12px;">Welcome back</p>
+          <h1 style="font-family:'Playfair Display',serif;font-size:32px;font-weight:300;color:#f5ede0;">Your Account</h1>
         </div>
-        <div>
-          <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Password</label>
-          <input type="password" [(ngModel)]="loginForm.password" name="password" required
-                 placeholder="••••••••"
-                 style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
-        </div>
-        <button type="submit" [disabled]="loading()"
-                style="margin-top:8px;width:100%;padding:14px;background:#c9a96e;color:#1a0f0f;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-weight:500;transition:background .2s;"
-                [style.opacity]="loading() ? '0.6' : '1'">
-          {{ loading() ? 'Signing In…' : 'Sign In' }}
+        <button type="button" (click)="logout()"
+          style="padding:10px 24px;border:1px solid #3a2020;background:transparent;color:#b8a89a;font-size:9px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;font-family:'Raleway',sans-serif;">
+          Sign Out
         </button>
-      </form>
-    }
+      </div>
 
-    <!-- Register form -->
-    @if (tab() === 'register') {
-      <form (ngSubmit)="register()" style="display:flex;flex-direction:column;gap:16px;">
-        <div>
-          <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Name</label>
-          <input type="text" [(ngModel)]="registerForm.username" name="username" required
-                 placeholder="Your name"
-                 style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Email</label>
-          <input type="email" [(ngModel)]="registerForm.email" name="email" required
-                 placeholder="your@email.com"
-                 style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Password</label>
-          <input type="password" [(ngModel)]="registerForm.password" name="password" required minlength="8"
-                 placeholder="Min. 8 characters"
-                 style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
-        </div>
-        <button type="submit" [disabled]="loading()"
-                style="margin-top:8px;width:100%;padding:14px;background:#c9a96e;color:#1a0f0f;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-weight:500;transition:background .2s;"
-                [style.opacity]="loading() ? '0.6' : '1'">
-          {{ loading() ? 'Creating Account…' : 'Create Account' }}
-        </button>
-      </form>
-    }
+      <!-- Order history -->
+      <p style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#b8a89a;margin-bottom:24px;">Order History</p>
 
-  </div>
+      @if (ordersLoading()) {
+        <div style="display:flex;align-items:center;gap:16px;padding:48px 0;">
+          <div style="width:20px;height:20px;border:1px solid rgba(201,169,110,0.3);border-top-color:#c9a96e;border-radius:50%;animation:spin 1s linear infinite;"></div>
+          <p style="font-size:12px;color:#b8a89a;">Loading orders…</p>
+        </div>
+      } @else if (orders().length === 0) {
+        <div style="border:1px solid #3a2020;padding:48px;text-align:center;">
+          <p style="font-family:'Playfair Display',serif;font-size:18px;color:#b8a89a;font-weight:300;">No orders yet.</p>
+          <a href="/flowers" style="display:inline-block;margin-top:20px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#c9a96e;text-decoration:none;border-bottom:1px solid rgba(201,169,110,.3);padding-bottom:3px;">
+            Shop Now
+          </a>
+        </div>
+      } @else {
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          @for (order of orders(); track order.id) {
+            <div style="border:1px solid #3a2020;background:#0d0808;">
+
+              <!-- Order row -->
+              <div (click)="toggleOrder(order.id)"
+                style="display:grid;grid-template-columns:80px 1fr 120px 140px 40px;gap:16px;padding:16px 20px;align-items:center;cursor:pointer;">
+                <span style="font-size:12px;color:#b8a89a;">#{{ order.id }}</span>
+                <span style="font-size:12px;color:#b8a89a;">{{ order.createdAt | date:'MMM d, yyyy' }}</span>
+                <span style="font-size:13px;color:#f5ede0;">{{ order.totalAmount | currency:'USD' }}</span>
+                <span style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:4px 10px;border:1px solid;width:fit-content;"
+                  [style.color]="order.status === 'PAID' ? '#c9a96e' : order.status === 'SHIPPED' ? '#7aaa78' : order.status === 'FULFILLED' ? '#a0c4ff' : '#b8a89a'"
+                  [style.border-color]="order.status === 'PAID' ? 'rgba(201,169,110,.3)' : order.status === 'SHIPPED' ? 'rgba(122,170,120,.3)' : order.status === 'FULFILLED' ? 'rgba(160,196,255,.3)' : '#3a2020'">
+                  {{ order.status }}
+                </span>
+                <span style="color:#b8a89a;font-size:14px;text-align:right;">{{ expandedOrderId() === order.id ? '▲' : '▼' }}</span>
+              </div>
+
+              <!-- Expanded items -->
+              @if (expandedOrderId() === order.id) {
+                <div style="border-top:1px solid #3a2020;padding:16px 20px;">
+                  @for (item of order.items; track item.productId) {
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a1818;">
+                      <span style="font-size:13px;color:#f5ede0;">{{ item.productName }}</span>
+                      <span style="font-size:12px;color:#b8a89a;">× {{ item.quantity }}</span>
+                      <span style="font-size:13px;color:#c9a96e;">{{ (item.priceAtPurchase * item.quantity) | currency:'USD' }}</span>
+                    </div>
+                  }
+                  <div style="display:flex;justify-content:flex-end;padding-top:12px;">
+                    <span style="font-size:13px;color:#b8a89a;margin-right:16px;">Total</span>
+                    <span style="font-family:'Playfair Display',serif;font-size:16px;color:#f5ede0;">{{ order.totalAmount | currency:'USD' }}</span>
+                  </div>
+                </div>
+              }
+
+            </div>
+          }
+        </div>
+      }
+
+    </div>
+  }
+
+  <!-- ── Logged-out view ── -->
+  @if (!isLoggedIn()) {
+    <div style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 80px);padding:24px;">
+      <div style="width:100%;max-width:420px;">
+
+        <!-- Header -->
+        <div style="text-align:center;margin-bottom:40px;">
+          <p style="font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:#c9a96e;margin-bottom:12px;">Welcome</p>
+          <h1 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:300;color:#f5ede0;letter-spacing:.06em;">Your Account</h1>
+        </div>
+
+        <!-- Tab toggle -->
+        <div style="display:flex;border:1px solid #3a2020;margin-bottom:32px;">
+          <button (click)="tab.set('login')"
+                  style="flex:1;padding:12px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;transition:background .2s,color .2s;"
+                  [style.background]="tab() === 'login' ? '#261414' : 'transparent'"
+                  [style.color]="tab() === 'login' ? '#f5ede0' : '#b8a89a'">
+            Sign In
+          </button>
+          <button (click)="tab.set('register')"
+                  style="flex:1;padding:12px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;border-left:1px solid #3a2020;cursor:pointer;transition:background .2s,color .2s;"
+                  [style.background]="tab() === 'register' ? '#261414' : 'transparent'"
+                  [style.color]="tab() === 'register' ? '#f5ede0' : '#b8a89a'">
+            Register
+          </button>
+        </div>
+
+        <!-- Success banner -->
+        @if (registered()) {
+          <p style="font-size:11px;text-align:center;margin-bottom:24px;border:1px solid rgba(201,169,110,.3);padding:12px;color:#c9a96e;letter-spacing:.05em;">
+            Account created — sign in below.
+          </p>
+        }
+
+        <!-- Error banner -->
+        @if (error()) {
+          <p style="font-size:11px;text-align:center;margin-bottom:24px;color:#e8b4a0;">{{ error() }}</p>
+        }
+
+        <!-- Login form -->
+        @if (tab() === 'login') {
+          <form (ngSubmit)="login()" style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Email</label>
+              <input type="email" [(ngModel)]="loginForm.email" name="email" required
+                     placeholder="your@email.com"
+                     style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Password</label>
+              <input type="password" [(ngModel)]="loginForm.password" name="password" required
+                     placeholder="••••••••"
+                     style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <button type="submit" [disabled]="loading()"
+                    style="margin-top:8px;width:100%;padding:14px;background:#c9a96e;color:#1a0f0f;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-weight:500;transition:background .2s;"
+                    [style.opacity]="loading() ? '0.6' : '1'">
+              {{ loading() ? 'Signing In…' : 'Sign In' }}
+            </button>
+          </form>
+        }
+
+        <!-- Register form -->
+        @if (tab() === 'register') {
+          <form (ngSubmit)="register()" style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Name</label>
+              <input type="text" [(ngModel)]="registerForm.username" name="username" required
+                     placeholder="Your name"
+                     style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Email</label>
+              <input type="email" [(ngModel)]="registerForm.email" name="email" required
+                     placeholder="your@email.com"
+                     style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b8a89a;margin-bottom:8px;">Password</label>
+              <input type="password" [(ngModel)]="registerForm.password" name="password" required minlength="8"
+                     placeholder="Min. 8 characters"
+                     style="width:100%;background:#261414;border:1px solid #3a2020;color:#f5ede0;padding:12px 16px;font-size:13px;font-family:'Raleway',sans-serif;outline:none;box-sizing:border-box;">
+            </div>
+            <button type="submit" [disabled]="loading()"
+                    style="margin-top:8px;width:100%;padding:14px;background:#c9a96e;color:#1a0f0f;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-weight:500;transition:background .2s;"
+                    [style.opacity]="loading() ? '0.6' : '1'">
+              {{ loading() ? 'Creating Account…' : 'Create Account' }}
+            </button>
+          </form>
+        }
+
+      </div>
+    </div>
+  }
+
 </div>

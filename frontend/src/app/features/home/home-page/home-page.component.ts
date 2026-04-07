@@ -1,9 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { SiteImageService } from '../../../core/services/site-image.service';
 import { Product } from '../../../core/models/product.model';
 
 @Component({
@@ -17,9 +18,19 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
   private authService = inject(AuthService);
+  private siteImageService = inject(SiteImageService);
   private router = inject(Router);
 
   featured = signal<Product[]>([]);
+  siteImages = signal<Record<string, string>>({});
+
+  constructor() {
+    effect(() => {
+      if (this.featured().length > 0) {
+        setTimeout(() => this.setupRevealObserver(), 0);
+      }
+    });
+  }
 
   testimonials = [
     { quote: '"The most beautiful arrangement I have ever received. It arrived perfectly wrapped and the blooms lasted over two weeks."', author: '— Melissa R., Brandon FL' },
@@ -28,10 +39,10 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   ];
 
   accessories = [
-    { icon: '◈', name: 'Gold Lotus Bracelet',  price: 48 },
-    { icon: '✦', name: 'Pearl Bloom Cuff',      price: 65 },
-    { icon: '❋', name: 'Floral Charm Set',      price: 34 },
-    { icon: '☽', name: 'Nile Moon Pendant',     price: 52 },
+    { slot: 'accessory_1', imageUrl: 'images/jewelry1.jpg', name: 'Gold Lotus Bracelet',  price: 48 },
+    { slot: 'accessory_2', imageUrl: 'images/jewelry2.jpg', name: 'Pearl Bloom Cuff',      price: 65 },
+    { slot: 'accessory_3', imageUrl: 'images/jewelry3.jpg', name: 'Floral Charm Set',      price: 34 },
+    { slot: 'accessory_4', imageUrl: 'images/jewelry4.jpg', name: 'Nile Moon Pendant',     price: 52 },
   ];
 
   features = [
@@ -43,16 +54,25 @@ export class HomePageComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.productService.getAll().subscribe(products => this.featured.set(products.slice(0, 5)));
+    this.siteImageService.getAll().subscribe(images => this.siteImages.set(images));
+  }
+
+  imageFor(slot: string, fallback: string): string {
+    return this.siteImages()[slot] ?? fallback;
   }
 
   ngAfterViewInit() {
+    this.setupRevealObserver();
+  }
+
+  private setupRevealObserver() {
     const observer = new IntersectionObserver(
       entries => entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
       }),
       { threshold: 0.12 }
     );
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
   }
 
   onAddToCart(productId: number) {

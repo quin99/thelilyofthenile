@@ -34,6 +34,8 @@ services:
       UPLOADS_DIR: /app/uploads
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@thelilyofthenile.com}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme-admin-password}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MAIL_FROM: ${MAIL_FROM:-}
     volumes:
       - uploads_data:/app/uploads
     restart: on-failure

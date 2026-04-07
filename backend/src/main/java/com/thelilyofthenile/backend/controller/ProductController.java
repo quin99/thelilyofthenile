@@ -22,8 +22,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> getProducts() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<ProductResponseDTO>> getProducts(
+            @RequestParam(required = false) String category) {
+        return ResponseEntity.ok(category != null ? service.getByCategory(category) : service.getAll());
     }
 
     // Create Product
